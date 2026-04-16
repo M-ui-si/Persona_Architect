@@ -1532,5 +1532,4 @@ HTML_TEMPLATE = '''
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # 优先用平台端口，本地默认5000
-    app.run(debug=False, host='0.0.0.0', port=port)
+    app.run(debug=False, host='0.0.0.0', port=8080)
