@@ -1530,5 +1530,9 @@ HTML_TEMPLATE = '''
 </html>
 '''
 
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    # 只在本地环境开启 Debug，生产环境自动关闭
+    debug_mode = os.environ.get("RAILWAY_ENVIRONMENT") is None
+    app.run(debug=debug_mode, host='0.0.0.0', port=port)
