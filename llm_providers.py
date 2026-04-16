@@ -1,19 +1,16 @@
-# llm_providers.py
+# llm_providers.py （修复版）
 from abc import ABC, abstractmethod
 
 class LLMProvider(ABC):
     @abstractmethod
     def chat(self, messages, temperature=0.1):
-        """发送对话消息并返回模型生成的文本内容"""
         pass
-    
-# 在 LLMProvider 类定义之后追加
 
+# 通义千问
 class DashScopeProvider(LLMProvider):
     def __init__(self, api_key, model='qwen-turbo'):
         import dashscope
         dashscope.api_key = api_key
-        self.api_key = api_key
         self.model = model
 
     def chat(self, messages, temperature=0.1):
@@ -28,22 +25,22 @@ class DashScopeProvider(LLMProvider):
             return response.output.choices[0].message.content
         else:
             raise Exception(f"DashScope API error: {response.code}")
-        
+
+# OpenAI 修复版
 class OpenAIProvider(LLMProvider):
     def __init__(self, api_key, model='gpt-3.5-turbo'):
-        import openai
-        openai.api_key = api_key
+        from openai import OpenAI
+        self.client = OpenAI(api_key=api_key)
         self.model = model
 
     def chat(self, messages, temperature=0.1):
-        import openai
-        response = openai.ChatCompletion.create(
+        response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             temperature=temperature
         )
         return response.choices[0].message.content
-    
+
 def create_llm_provider(provider_type, api_key, model=None):
     if provider_type == "dashscope":
         return DashScopeProvider(api_key, model=model or "qwen-turbo")
