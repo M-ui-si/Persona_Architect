@@ -425,9 +425,9 @@ def analyze_description_to_dimensions(description):
 
 # ==================== Flask 路由 ====================
 @app.route('/')
-def index():
-    return render_template_string(HTML_TEMPLATE)
-
+def health_check():
+    return "OK", 200
+    
 @app.route('/api/chat', methods=['POST'])   #AI辅助生成：DeepSeek-V3, 2026-4-12
 def chat():
     data = request.json
